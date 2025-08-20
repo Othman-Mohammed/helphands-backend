@@ -1,3 +1,4 @@
+// Express Server for HelpHands
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
@@ -5,23 +6,18 @@ require('dotenv').config();
 
 const app = express();
 
-// Enhanced CORS configuration
+// Allow requests from frontend
 app.use(cors({
-  origin: ['http://localhost:3000', 'http://127.0.0.1:3000', '*'],
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
+  origin: 'http://localhost:3000',
   credentials: true
 }));
 
-// Handle preflight requests
-app.options('*', cors());
+// Parse JSON requests
+app.use(express.json());
 
-// Middleware
-app.use(express.json()); // Parse JSON requests
-
-// Connect to MongoDB
+// Connect to MongoDB database
 mongoose.connect(process.env.MONGODB_URI)
-  .then(() => console.log('MongoDB connected successfully'))
+  .then(() => console.log('Connected to MongoDB'))
   .catch((error) => console.log('MongoDB connection error:', error));
 
 // Import routes
@@ -36,13 +32,13 @@ app.use('/api/users', userRoutes);
 app.use('/api/events', eventRoutes);
 app.use('/api/announcements', announcementRoutes);
 
-// Basic test route
+// Test route
 app.get('/', (req, res) => {
-  res.json({ message: 'HelpHands Backend API is running!' });
+  res.json({ message: 'HelpHands API is running!' });
 });
 
 // Start server
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+  console.log(`Server running on http://localhost:${PORT}`);
 });

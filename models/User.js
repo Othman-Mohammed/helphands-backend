@@ -3,19 +3,16 @@ const mongoose = require('mongoose');
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
-    required: true,
-    trim: true
+    required: true
   },
   email: {
     type: String,
     required: true,
-    unique: true,
-    lowercase: true
+    unique: true
   },
   password: {
     type: String,
-    required: true,
-    minlength: 6
+    required: true
   },
   phone: {
     type: String,
@@ -27,16 +24,10 @@ const userSchema = new mongoose.Schema({
   },
   role: {
     type: String,
-    enum: ['volunteer', 'admin'],
-    default: 'volunteer'
-  },
-  status: {
-    type: String,
-    enum: ['active', 'inactive', 'enrolled', 'pending'],
-    default: 'active'
+    default: 'volunteer' // Everyone is volunteer by default, except  foe the pre created admin that I created
   }
 }, {
-  timestamps: true  // Automatically adds createdAt and updatedAt
+  timestamps: true // Adds createdat and updatedat automatically
 });
 
 module.exports = mongoose.model('User', userSchema);

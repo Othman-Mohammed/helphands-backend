@@ -3,43 +3,35 @@ const mongoose = require('mongoose');
 const announcementSchema = new mongoose.Schema({
   title: {
     type: String,
-    required: [true, 'Announcement title is required'],
-    trim: true,
-    maxlength: [100, 'Title cannot exceed 100 characters']
+    required: true,
+    default: 'Event Announcement'
   },
-  content: {
+  message: {
     type: String,
-    required: [true, 'Announcement content is required'],
-    trim: true,
-    maxlength: [2000, 'Content cannot exceed 2000 characters']
+    required: true
   },
-  priority: {
-    type: String,
-    enum: ['low', 'medium', 'high', 'urgent'],
-    default: 'medium'
-  },
-  target_audience: {
-    type: String,
-    enum: ['all', 'volunteers', 'admins'],
-    default: 'all'
-  },
-  is_active: {
-    type: Boolean,
-    default: true
+  event: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Event',
+    required: true
   },
   created_by: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
     required: true
-  }
+  },
+  read_by: [{
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User'
+    },
+    read_at: {
+      type: Date,
+      default: Date.now
+    }
+  }]
 }, {
-  timestamps: true // Automatically adds createdAt and updatedAt
+  timestamps: true // Adds createdat and updatedat automatically
 });
-
-// Index for performance
-announcementSchema.index({ priority: -1 }); // High priority first
-announcementSchema.index({ created_at: -1 }); // Newest first
-announcementSchema.index({ target_audience: 1 }); // By audience
-announcementSchema.index({ is_active: 1 }); // Active announcements
 
 module.exports = mongoose.model('Announcement', announcementSchema);
